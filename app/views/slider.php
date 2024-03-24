@@ -43,15 +43,17 @@
                         <?php
                         foreach ($post_index as $key => $value) {
                         ?>
-                            <div class="row">
-                                <div class="col-md-4 col-xs-4 col-sm-4">
-                                    <img src="<?= BASE_URL ?>/public/uploads/post/<?=$value['image_post']?>">
+                            <form action="">
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-4 col-sm-4">
+                                        <img src="<?= BASE_URL ?>/public/uploads/post/<?= $value['image_post'] ?>">
+                                    </div>
+                                    <div class="col-md-8 col-xs-8 col-sm-8">
+                                        <h4><a href="<?= BASE_URL ?>/tintuc/chitiettin/<?= $value['id_post'] ?>"> <?= $value['title_post'] ?> </a> </h4>
+                                        <p><?= substr($value['content_post'], 0, 100) ?></p>
+                                    </div>
                                 </div>
-                                <div class="col-md-8 col-xs-8 col-sm-8">
-                                    <h4><?=$value['title_post']?></h4>
-                                    <p><?= substr($value['content_post'],0,100) ?></p>
-                                </div>
-                            </div>
+                            </form>
                             <hr>
                         <?php
                         }

@@ -12,7 +12,6 @@
                 </div>
                 <div class="form-check">
                     <input type="submit" name="submit_reset">
-                    <input type="reset" class="btn-gui" value="Nhập lại">
                 </div>
             </form>
         </div>

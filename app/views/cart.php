@@ -1,3 +1,10 @@
+<?php
+if (!isset($_SESSION['shopping_cart']) || count($_SESSION['shopping_cart']) === 0) {
+   $disableSubmit = true; // Thiết lập biến disableSubmit thành true để ẩn nút "Gửi đơn hàng"
+} else {
+   $disableSubmit = false; // Nếu giỏ hàng tồn tại và có sản phẩm, cho phép hiển thị nút "Gửi đơn hàng"
+}
+?>
 <section>
    <div class="bg_in">
       <div class="content_page cart_page">
@@ -41,6 +48,7 @@
                   <tbody>
                      <?php
                      if (isset($_SESSION['shopping_cart'])) {
+                        // var_dump($_SESSION['shopping_cart']) 
                      ?>
                         <form action='<?php echo BASE_URL ?>/giohang/updategiohang' method="POST">
                            <?php
@@ -52,7 +60,7 @@
                               <tr class="tr">
                                  <td data-th="Hình ảnh">
                                     <div class="col_table_image col_table_hidden-xs">
-                                       <img src="<?php echo BASE_URL ?>/public/uploads/product/<?php echo $value['product_image'] ?>" alt="Máy in laser Canon LBP251DW" class="img-responsive" />
+                                       <img src="<?php echo BASE_URL ?>/public/uploads/product/<?php echo $value['product_image'] ?>" alt="" class="img-responsive" />
                                     </div>
                                  </td>
                                  <td data-th="Sản phẩm">
@@ -79,20 +87,22 @@
                                     </span></td>
                                  <td class="actions aligncenter">
                                     <button type="submit" style="box-shadow: none;" name="delete_cart" value="<?php echo $value['product_id'] ?>" class="btn btn-danger  btn-custom-size">Xóa</button>
-                                    <button type="submit" style="box-shadow: none; margin-top: 5px" name="update_cart" value="<?php echo $value['product_id'] ?>" class="btn btn-success btn-custom-size">Update</button>
                                  </td>
                               </tr>
+
                            <?php }
                            ?>
+                           <tr>
+                              <td colspan="7" class="textright_text">
+                                 <div class="sum_price_all">
+                                    <button type="submit" style="box-shadow: none;margin-left: 1050px; margin-bottom: 5px; " name="update_cart" value="<?php echo $value['product_id'] ?>" class="btn btn-success btn-custom-size">Update</button>
+                                    <span class="text_price">Tổng tiền thành toán</span>:
+                                    <span class="text_price color_red"><?php echo number_format($total, 0, ',', '.') . 'đ' ?></span>
+                                 </div>
+                              </td>
+                           </tr>
                         </form>
-                        <tr>
-                           <td colspan="7" class="textright_text">
-                              <div class="sum_price_all">
-                                 <span class="text_price">Tổng tiền thành toán</span>:
-                                 <span class="text_price color_red"><?php echo number_format($total, 0, ',', '.') . 'đ' ?></span>
-                              </div>
-                           </td>
-                        </tr>
+
                      <?php } else {
                      ?>
                         <tr>
@@ -103,6 +113,7 @@
                            </td>
                         </tr>
                      <?php } ?>
+
                   </tbody>
                   <tfoot>
                      <tr class="tr_last">
@@ -112,6 +123,7 @@
                         </td>
                      </tr>
                   </tfoot>
+
                </table>
             </div>
             <div class="contact_form">
@@ -141,59 +153,59 @@
                   <div class="form_contact_in">
                      <div class="box_contact">
                         <form name="FormDatHang" autocomplete="off" method="post" action="<?= BASE_URL ?>/giohang/dathang">
-                           <?php if (isset($_SESSION['customer'])) { ?>
-                              <div class="content-box_contact">
-                                 <div class="row">
-                                    <div class="container">
-                                       <label for="name">Họ và tên: <span style="color:red;">*</span></label>
-                                       <input type="text" name="name" required class="clsip" value="<?= isset($_SESSION['custumer_name']) ? $_SESSION['custumer_name'] : '' ?>">
-                                    </div>
-                                    <div class="clear"></div>
+                           <div class="content-box_contact">
+                              <div class="row">
+                                 <div class="container">
+                                    <label for="name">Họ và tên: <span style="color:red;">*</span></label>
+                                    <input type="text" name="name" required class="clsip" value="<?= isset($_SESSION['custumer_name']) ? $_SESSION['custumer_name'] : '' ?>">
                                  </div>
-                                 <!---row---->
-                                 <div class="row">
-                                    <div class="container">
-                                       <label for="sdt">Số điện thoại: <span style="color:red;">*</span></label>
-                                       <input type="text" name="sdt" required onkeydown="return checkIt(event)" class="clsip" value="<?= isset($_SESSION['custumer_phone']) ? $_SESSION['custumer_phone'] : '' ?>">
-                                    </div>
-                                    <div class="clear"></div>
-                                 </div>
-                                 <!---row---->
-                                 <div class="row">
-                                    <div class="container">
-                                       <label for="diachi">Địa chỉ: <span style="color:red;">*</span></label>
-                                       <input type="text" name="diachi" required class="clsip" value="<?= isset($_SESSION['custumer_address']) ? $_SESSION['custumer_address'] : '' ?>">
-                                    </div>
-                                    <div class="clear"></div>
-                                 </div>
-                                 <!---row---->
-                                 <div class="row">
-                                    <div class="container">
-                                       <label for="email">Email: <span style="color:red;">*</span></label>
-                                       <input type="text" name="email" onchange="return KiemTraEmail(this);" required class="clsip" value="<?= isset($_SESSION['custumer_email']) ? $_SESSION['custumer_email'] : '' ?>">
-                                    </div>
-                                    <div class="clear"></div>
-                                 </div>
-                                 <!---row---->
-                                 <div class="row">
-                                    <div class="container">
-                                       <label for="noidung">Nội dung: <span style="color:red;">*</span></label>
-                                       <textarea type="text" name="noidung" class="clsipa"></textarea>
-                                    </div>
-                                    <div class="clear"></div>
-                                 </div>
-                                 <!---row---->
-                                 <div class="row btnclass">
-                                    <div class="container">
-                                       <input type="submit" class="btn-gui" name="" id="" value="Gửi đơn hàng">
-                                       <input type="reset" class="btn-gui" value="Nhập lại">
-                                    </div>
-                                    <div class="clear"></div>
-                                 </div>
-                                 <!---row---->
                                  <div class="clear"></div>
                               </div>
-                           <?php } ?>
+                              <!---row---->
+                              <div class="row">
+                                 <div class="container">
+                                    <label for="sdt">Số điện thoại: <span style="color:red;">*</span></label>
+                                    <input type="text" name="sdt" required onkeydown="return checkIt(event)" class="clsip" value="<?= isset($_SESSION['custumer_phone']) ? $_SESSION['custumer_phone'] : '' ?>">
+                                 </div>
+                                 <div class="clear"></div>
+                              </div>
+                              <!---row---->
+                              <div class="row">
+                                 <div class="container">
+                                    <label for="diachi">Địa chỉ: <span style="color:red;">*</span></label>
+                                    <input type="text" name="diachi" required class="clsip" value="<?= isset($_SESSION['custumer_address']) ? $_SESSION['custumer_address'] : '' ?>">
+                                 </div>
+                                 <div class="clear"></div>
+                              </div>
+                              <!---row---->
+                              <div class="row">
+                                 <div class="container">
+                                    <label for="email">Email: <span style="color:red;">*</span></label>
+                                    <input type="text" name="email" onchange="return KiemTraEmail(this);" required class="clsip" value="<?= isset($_SESSION['custumer_email']) ? $_SESSION['custumer_email'] : '' ?>">
+                                 </div>
+                                 <div class="clear"></div>
+                              </div>
+                              <!---row---->
+                              <div class="row">
+                                 <div class="container">
+                                    <label for="noidung">Nội dung: <span style="color:red;">*</span></label>
+                                    <textarea type="text" name="noidung" class="clsipa"></textarea>
+                                 </div>
+                                 <div class="clear"></div>
+                              </div>
+                              <!---row---->
+                              <div class="row btnclass">
+                                 <div class="container">
+                                    <?php if (!$disableSubmit) { ?> <!-- Kiểm tra nếu không cần ẩn nút "Gửi đơn hàng" -->
+                                       <input type="submit" class="btn-gui" name="" id="" value="Gửi đơn hàng">
+                                    <?php } ?>
+                                    <input type="reset" class="btn-gui" value="Nhập lại">
+                                 </div>
+                                 <div class="clear"></div>
+                              </div>
+                              <!---row---->
+                              <div class="clear"></div>
+                           </div>
                         </form>
                      </div>
                   </div>

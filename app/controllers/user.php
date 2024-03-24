@@ -67,6 +67,7 @@ class user extends DController
 
         if ($count == 0) {
             $massage['msg'] = "Mật khẩu sai";
+            // echo '<script> alert("sai mật khẩu"); </script>';
             // Redirect to login page with a message
             header("Location: " . BASE_URL . "/user/dangnhap?msg=" . urlencode(serialize($massage)));
             exit();
@@ -89,31 +90,41 @@ class user extends DController
     {
         Session::init();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Bắt dữ liệu từ form
             $update_name = $_POST['update_name'];
             $update_phone = $_POST['update_phone'];
             $update_email = $_POST['update_email'];
             $update_address = $_POST['update_address'];
 
-            // Lưu thông tin vào SESSION hoặc database
-            $_SESSION['custumer_name'] = $update_name;
-            $_SESSION['phone'] = $update_phone;
-            $_SESSION['email'] = $update_email;
-            $_SESSION['address'] = $update_address;
+            // Kiểm tra và xử lý dữ liệu nếu cần thiết
 
-            // Chuyển hướng về trang hiển thị thông tin
+            // Gọi model để cập nhật thông tin trong cơ sở dữ liệu
+            $customermodel = $this->load->model('customermodel');
+
+            // Truyền dữ liệu cần cập nhật vào model
+            $data = array(
+                'update_name' => $update_name,
+                'update_phone' => $update_phone,
+                'update_email' => $update_email,
+                'update_address' => $update_address
+            );
+
+            // Gọi phương thức để cập nhật thông tin khách hàng trong cơ sở dữ liệu
+            $customermodel->update_customer($_SESSION['custumer_id'], $data);
+
+
+            // Redirect sau khi cập nhật thành công
             header("Location: " . BASE_URL . "/user/profile");
             exit();
         }
     }
+
     public function dangxuat()
     {
         Session::init();
         Session::destroy();
         $massage['msg'] = 'Đăng xuất thành công';
-        // Chuyển hướng về trang đăng nhập với thông báo đăng xuất
         header("Location:" . BASE_URL . "/user/dangnhap?msg=" . urldecode(serialize($massage)));
-        // Chuyển hướng về trang chủ
-        // header("Location:" . BASE_URL);
         exit();
     }
 
@@ -153,10 +164,10 @@ class user extends DController
 
         $this->load->view("header", $data);
         switch ($a) {
-            case BASE_URL . '/user/profile':
+            case '0':
                 $this->load->view("profile");
                 break;
-            case BASE_URL . '/user/change-password':
+            case '1':
                 $this->load->view("forgetpass");
                 break;
             default:
@@ -227,9 +238,14 @@ class user extends DController
                 $mail->Subject = 'Reset Password';
                 $mail->isHTML(true);
                 $mail->Body = "Cấp lại mã code $code...";
+            } else {
+                echo '<script> alert("Email của bạn chưa đăng kí tài khoản"); </script>';
+                $this->load->view("header", $data);
+                $this->load->view("forgetpass");
+                $this->load->view("footer");
             }
             if ($mail->send()) {
-                echo '<script> alert("Check Your Email and Click on the link sent to your email"); </script>';
+                echo '<script> alert("Hãy kiểm tra lại mail của bạn"); </script>';
                 $this->load->view("header", $data);
                 $this->load->view("checkcode");
                 $this->load->view("footer");
@@ -242,7 +258,7 @@ class user extends DController
                 $this->load->view("resetpas");
                 $this->load->view("footer");
             } else {
-                echo "Không đúng mã code";
+                echo '<script> alert("Không đúng mã code"); </script>';
                 $this->load->view("header", $data);
                 $this->load->view("checkcode");
                 $this->load->view("footer");

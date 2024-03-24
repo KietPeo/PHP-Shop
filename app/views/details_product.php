@@ -4,6 +4,9 @@ foreach ($details_product as $key => $value) {
    $name_catgory_product = $value['title_category_product'];
    $id_cate = $value['id_category_product'];
 }
+
+
+
 ?>
 
 <section>
@@ -54,22 +57,25 @@ foreach ($details_product as $key => $value) {
                      </div>
                      <div class="content-des-pro">
                         <form action="<?= BASE_URL ?>/giohang/themgiohang" method="post">
+                           <input type="hidden" value="<?= $details['id_product'] ?>" name="product_id">
+                           <input type="hidden" value="<?= $details['title_product'] ?>" name="product_title">
+                           <input type="hidden" value="<?= $details['image_product'] ?>" name="product_image">
+                           <input type="hidden" value="<?= $details['price_product'] ?>" name="product_price">
+                           <!-- <input type="hidden" value="1" name="product_quanlity"> -->
 
                            <div class="content-des-pro_in">
                               <div class="pro-des-sum">
                                  <div class="price">
-                                    <p class="code_skin" style="margin-bottom:10px">
-                                       <span>Mã hàng: <a href="chitietsp.php">CRW-W06</a> | Thương hiệu: <a href="">Comrack</a></span>
-                                    </p>
+
                                     <div class="status_pro">
-                                       <span><b>Trạng thái:</b> Còn hàng</span>
+                                       <span><b>Trạng thái:</b><?= $details["quanlity_product"] > 0 ? "Còn Hàng " : 'Hết Hàng' ?></span>
                                     </div>
-                                    <div class="status_pro"><span><b>Xuất xứ:</b> Việt Nam</span></div>
+                                    <!-- Hiển thị các size -->
                                  </div>
                                  <div class="color_price">
                                     <span class="title_price bg_green">Giá </span>
                                     <?= number_format($details['price_product'], 0, ',', '.') . "đ" ?>
-                                    <span>vnđ</span>. (GIÁ CHƯA VAT)
+                                    <span>vnđ</span>
                                     <div class="clear"></div>
                                  </div>
                               </div>
@@ -85,14 +91,27 @@ foreach ($details_product as $key => $value) {
                               <div class="number_price">
                                  <div class="custom pull-left">
                                     <button onclick="var result = document.getElementById('qty'); var qty = result.value; if(!isNaN(qty) && qty > 0) result.value--; return false;" class="reduced items-count" type="button">-</button>
-                                    <input type="text" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty" name="qty">
+                                    <input type="text" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty" name="product_quanlity">
                                     <button onclick="var result = document.getElementById('qty'); var qty = result.value; if(!isNaN(qty)) result.value++; return false;" class="increase items-count" type="button">+</button>
                                     <div class="clear"></div>
                                  </div>
                                  <div class="clear"></div>
                               </div>
                               <div class="wp_a">
-                                 <input type="submit" style="box-shadow: none;" class="btn btn-info btn-md" name="addcart" value="Mua hàng" id="">
+                                 <?php
+                                 if ($details["quanlity_product"] > 0) {
+                                 ?>
+                                    <input type="submit" style="box-shadow: none;" class="btn btn-info btn-md" name="addcart" value="Mua hàng" id="">
+                                 <?php
+                                 } else {
+
+                                 ?>
+                                    <input type="submit" style="box-shadow: none;" disabled class="btn btn-info btn-md" name="addcart" value="Mua hàng" id="">
+
+                                 <?php
+                                 }
+                                 ?>
+
                                  <div class="clear"></div>
                               </div>
                               <div class="clear"></div>
@@ -115,7 +134,6 @@ foreach ($details_product as $key => $value) {
                         <div class="info-prod prod-price freeship">
                            <span class="title">
                               <p>
-                                 <!-- <img alt="chuyển hàng miễn phí tại thietbivanphong123.com" src="/data/upload/ship-hang-mien-phi.png" style="height:33px; width:60px" /> --> Bạn sẽ được giao hàng miễn phí trong khu vực nội thành TPHCM khi mua sản phẩm này.
                               </p>
                            </span>
                            <span class="row more"><a href="" title="">Xem thêm</a>
@@ -137,69 +155,29 @@ foreach ($details_product as $key => $value) {
                <div class="clear"></div>
                <div class="clear"></div>
             <?php } ?>
-            <!-- <div class="content-brank">
-               <p><strong>Apple </strong>tự hảo<strong>&nbsp;</strong>là thương hiệu Việt Nam về sản phẩm tủ rack 19", tủ cửa lưới, tủ treo tường, bảo vệ thiết bị mạng an toàn, dễ dàng quản lý và vận hành.</p>
-               </div> -->
-            <div>
-               <label for="">Bình luận</label>
-               <textarea disabled name="cmt" id="cmt" cols="30" rows="10">
 
-               </textarea>
-               <label for="">Nhập thông tin </label>
-               <input name="cmt-info" type="text">
-               <button class="btn btn-info">Gửi</button>
-            </div> <br>
+            <?php foreach ($data['cmt'] as $key => $comment) : ?>
+               <div class="comment">
+                  <p><strong>Người dùng:</strong> <?= $comment['custumer_id'] ?></p>
+                  <p><strong>Nội dung bình luận:</strong> <?= $comment['content'] ?></p>
+               </div>
+               <hr>
+            <?php endforeach; ?>
 
-            <div class="module_pro_all">
-               <div class="box-title">
-                  <div class="title-bar">
-                     <h3>Sản phẩm liên quan</h3>
-                  </div>
-               </div>
-               <div class="pro_all_gird">
-                  <div class="girds_all list_all_other_page ">
-                     <?php
-                     foreach ($related as $key => $relate) {
-                     ?>
-                        <form action="<?= BASE_URL ?>/giohang/themgiohang" method="post">
-                           <div class="grids">
-                              <div class="grids_in">
-                                 <div class="content">
-                                    <div class="img-right-pro">
-                                       <a href="sanpham.php">
-                                          <img class="lazy img-pro content-image" src="<?= BASE_URL ?>/public/uploads/product/<?= $relate['image_product'] ?> " data-original="image/iphone.png" alt="" />
-                                       </a>
-                                       <div class="content-overlay"></div>
-                                       <div class="content-details fadeIn-top">
-                                          <?= $relate['desc_product'] ?>
-                                       </div>
-                                    </div>
-                                    <div class="name-pro-right">
-                                       <a href="<?= BASE_URL ?>/sanpham/chitietsanpham/<?= $relate['id_product'] ?>">
-                                          <?= $relate['title_product'] ?>
-                                       </a>
-                                    </div>
-                                    <div class="add_card">
-                                       <div>
-                                          <input type="submit" style="box-shadow: none;" class="btn btn-info btn-md" name="addcart" value="Đặt Hàng" id="">
-                                       </div>
-                                    </div>
-                                    <div class="price_old_new">
-                                       <div class="price">
-                                          <span class="news_price"><?= number_format($product['price_product'], 0, ',', '.') . "đ" ?></span>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                        </form>
-                     <?php } ?>
-                     <div class="clear"></div>
-                  </div>
-                  <div class="clear"></div>
-               </div>
-               <div class="clear"></div>
-            </div>
+            <!-- Form để thêm bình luận mới -->
+            <form action="<?= BASE_URL ?>/sanpham/luuBinhLuan/<?= $details['id_product'] ?>" method="POST">
+               <?php if (isset($_SESSION['customer'])) : ?>
+                  <input type="hidden" name="product_id" value="<?= $details['id_product'] ?>">
+                  <input type="hidden" name="custumer" value="<?= $_SESSION['custumer_name'] ?>">
+                  <label for="cmt-info">Nhập bình luận của bạn:</label>
+                  <textarea name="cmt-info" id="cmt-info" cols="30" rows="5" required></textarea>
+                  <button type="submit" class="btn btn-info">Gửi</button>
+               <?php else : ?>
+                  <p>Bạn cần đăng nhập để bình luận.</p>
+               <?php endif; ?>
+            </form>
+
+
             </div>
             <!--end:left-->
             <div class="clear"></div>

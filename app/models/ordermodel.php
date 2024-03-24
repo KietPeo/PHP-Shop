@@ -20,15 +20,23 @@ class ordermodel extends DModel
         return $this->db->select($sql);
     }
 
+    public function list_order_customer($table_order, $email)
+    {
+        $sql = "SELECT * FROM $table_order WHERE email = :email";
+        $params = array(':email' => $email);
+        return $this->db->select($sql, $params);
+    }
+
     public function list_order_details($table_product, $table_order_details, $cond)
     {
         $sql = "SELECT * FROM $table_order_details,$table_product WHERE $cond ";
         return $this->db->select($sql);
     }
-    public function list_info( $table_order_details, $cond_info)
+
+    public function list_info($table_product,$table_order_details, $cond_info)
     {
-        $sql = "SELECT * FROM $table_order_details WHERE $cond_info limit 1";
+        $sql = "SELECT * FROM  $table_product,$table_order_details WHERE $cond_info LIMIT 1";
+        // echo $sql;
         return $this->db->select($sql);
     }
-    
 }

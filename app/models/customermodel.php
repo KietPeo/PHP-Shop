@@ -58,6 +58,16 @@ class customermodel extends DModel
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? true : false;
     }
+    public function update_customer($id, $data)
+    {
+        $table_custumer = "tbl_custumer";
+        $cond = " WHERE id = :id"; // Điều kiện cần thiết cho việc cập nhật
+    
+        // Gọi phương thức update từ db để cập nhật dữ liệu
+        return $this->db->update($table_custumer, $data, $cond);
+    }
+    
+
     // public function updatecategory($table_category_product, $data, $cond)
     // {
     //     return $this->db->update($table_category_product, $data, $cond);

@@ -90,14 +90,14 @@ class categorymodel extends DModel
     //sap xep tang dan
     public function list_product_up($table_product)
     {
-        $sql = "SELECT * FROM $table_product ORDER BY price_product ASC";
+        $sql = "SELECT * FROM $table_product ORDER BY price_product ASC limit 5";
         return $this->db->select($sql);
     }
 
     //sap xep giam dan
     public function list_product_down($table_product)
     {
-        $sql = "SELECT * FROM $table_product ORDER BY price_product DESC";
+        $sql = "SELECT * FROM $table_product ORDER BY price_product DESC limit 5";
         return $this->db->select($sql);
     }
 
@@ -121,11 +121,49 @@ class categorymodel extends DModel
     }
 
     //lấy ra chi tiết sản phẩm trang home
+    // public function details_product_home($table, $table_product,$table_product_more, $cond)
+    // {
+    //     $sql = "SELECT * FROM $table, $table_product,$table_product_more where $cond";
+    //     return $this->db->select($sql);
+    // }
+    public function search($table, $table_product, $cond, $search)
+    {
+        $sql = "SELECT * FROM $table_product JOIN $table ON $cond WHERE $table_product.title_product LIKE :search";
+        return $this->db->select($sql, [':search' => '%' . $search . '%']);
+    }
+
+    // public function details_product_home($table, $table_product, $cond)
+    // {
+    //     $sql = "SELECT * FROM $table, $table_product where $cond";
+    //     return $this->db->select($sql);
+    // }
+
     public function details_product_home($table, $table_product, $cond)
     {
-        $sql = "SELECT * FROM $table_product,$table where $cond ";
+        // Thực hiện truy vấn để lấy thông tin chi tiết sản phẩm
+        // Lưu ý: Đây là truy vấn tùy thuộc vào cấu trúc cơ sở dữ liệu của bạn
+        $sql = "SELECT * FROM $table, $table_product WHERE $cond";
         return $this->db->select($sql);
     }
+    public function cmt($table_bl, $id)
+    {
+        // Thực hiện truy vấn để lấy thông tin bình luận của sản phẩm có id là $id
+        $sql = "SELECT content, custumer_id 
+                FROM $table_bl 
+                WHERE id_product = :product_id";
+
+        // Bind giá trị của productId vào câu truy vấn để tránh SQL injection
+        $data = array(':product_id' => $id);
+
+        return $this->db->select($sql, $data);
+    }
+
+    function insertcmt($table_bl, $data)
+    {
+        return $this->db->insert($table_bl, $data);
+    }
+
+
     //lấy ra chi tiết bài viết trang home
     public function details_post_home($table_post, $post, $cond)
     {
@@ -144,6 +182,12 @@ class categorymodel extends DModel
         $sql = "SELECT * FROM $table_product order by $table_product.id_product desc";
         return $this->db->select($sql);
     }
+    public function list_order_customer($table_order, $email)
+    {
+        $sql = "SELECT * FROM $table_order WHERE email = '$email'";
+        return $this->db->select($sql);
+    }
+
     function insertproduct($table, $data)
     {
         return $this->db->insert($table, $data);

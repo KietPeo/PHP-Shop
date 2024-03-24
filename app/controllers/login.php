@@ -25,11 +25,15 @@ class login extends DController
     public function dashboard()
     {
         Session::checkSession();
+        $loginmodel = $this->load->model('loginmodel');
+        $data['dashboard'] = $loginmodel->dashboard()->fetchAll(); // Lấy dữ liệu và chuyển sang mảng
         $this->load->view("cpanal/header");
         $this->load->view("cpanal/menu");
-        $this->load->view("cpanal/dashboard");
+        $this->load->view("cpanal/dashboard", $data); // Truyền dữ liệu sang view
         $this->load->view("cpanal/footer");
     }
+
+
     public function authentication_login()
     {
         $username = $_POST['username'];
@@ -43,8 +47,6 @@ class login extends DController
             header("Location:" . BASE_URL . '/login');
         } else {
             $result = $loginmodel->getLogin($table_admin, $username, $password);
-            // echo $result[0]['username'];
-            // echo $result[0]['password'];
             Session::init();
             Session::set('login', true);
             Session::set("username", $result[0]['username']);
@@ -70,6 +72,7 @@ class login extends DController
 
         if ($count == 0) {
             $mesage['msg'] = 'sai mật khẩu';
+
             header("Location:" . BASE_URL . '/login');
         } else {
             $result = $loginmodel->getLogin($table_admin, $username, $password);

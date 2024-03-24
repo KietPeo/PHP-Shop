@@ -51,7 +51,7 @@ if (!empty($_GET['msg'])) {
     </div>
     <div class="mb-3">
         <label for="" class="form-label">sản phẩm Hot</label>
-        <select class="form-control"name="category_product"  >
+        <select class="form-control"name="product_hot"  >
             <?php 
                 if($pro['product_hot']==0){
             ?>

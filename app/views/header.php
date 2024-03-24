@@ -48,7 +48,6 @@
 <body>
 
     <header>
-
         <div class="header_top_menu">
             <div class="header_top_menu_all">
                 <div class="header_top" style="background-color:blanchedalmond">
@@ -57,8 +56,8 @@
                             <a href="<?= BASE_URL ?>"><img src="<?= BASE_URL ?>/public/images/logohere.jpeg" width="250" height="90" alt="logohere.jpeg" /></a>
                         </div>
                         <nav class="menu_top">
-                            <form style="margin-top: 10px ; margin-left:  40px;" class="search_form" method="get" action="">
-                                <input class="searchTerm" name="search" placeholder="Nhập từ cần tìm..." />
+                            <form style="margin-top: 10px ; margin-left:  40px;" class="search_form" method="get" action="<?=BASE_URL?>/sanpham/timkiem">
+                                <input class="searchTerm" name="search" placeholder="Nhập từ cần tìm..." required />
                                 <button class="searchButton" type="submit">
                                     <i class="fa fa-search" aria-hidden="true"></i>
                                 </button>
@@ -67,17 +66,17 @@
                         <div class="cart_wrapper">
                             <div class="cols_50">
                                 <ul style="margin-top: 15px; margin-left:50px">
-                                    <?php if (!isset($_SESSION['customer'])) { ?>
-                                        <li class=''><a href='<?= BASE_URL ?>/user/dangnhap'>Đăng Nhập</a></li>
+                                    <?php if (!isset($_SESSION['customer'])) { ?> 
+                                        <li class=''><a href='<?= BASE_URL ?>/user/dangnhap' style="font-size: 18px" >Đăng Nhập</a></li>
                                     <?php } else { ?>
                                         <form autocomplete="off" name="FormDatHang" method="post" action="<?= BASE_URL ?>/user/change">
                                             <input type="hidden" id="selected_option" name="selected_option" value="">
                                             <li class=''>
                                                 <label for="user_options">Xin Chào <?= $_SESSION['custumer_name'] ?></label>
-                                                <select  id="user_options" onchange="handleUserOption()">
+                                                <select id="user_options" onchange="handleUserOption()">
                                                     <option value="" disabled selected hidden>Chọn tùy chọn</option>
-                                                    <option value="<?= BASE_URL ?>/user/profile">Trang Profile</option>
-                                                    <option value="<?= BASE_URL ?>/user/change-password">Thay Đổi Mật Khẩu</option>
+                                                    <option value="0">Trang Profile</option>
+                                                    <option value="1">Thay Đổi Mật Khẩu</option>
                                                 </select>
                                                 <a href="<?= BASE_URL ?>/user/dangxuat">Đăng Xuất</a>
                                             </li>
@@ -165,6 +164,9 @@
                                     </li>
                                     <li class=''><a href='<?= BASE_URL ?>/giohang'>Giỏ hàng</a></li>
                                     <li class=''><a href='<?= BASE_URL ?>/index/lienhe'>Liên Hệ</a></li>
+                                    <?php if (isset($_SESSION['customer'])) { ?>
+                                        <li class=''><a href='<?= BASE_URL ?>/giohang/donhang'>Đơn hàng</a></li>
+                                    <?php } ?>
 
                                 </ul>
                             </div>

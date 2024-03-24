@@ -7,10 +7,10 @@ if (!empty($_GET['msg'])) {
 }
 ?>
 <h1 style="text-align: center;">Liệt Kê Sản Phẩm</h1>
-<form style="margin-top: 10px ; margin-left:  40px;" class="search_form" method="get" action="<?= BASE_URL ?>/sanpham/timkiem_admin">
-  <input class="searchTerm form-control w-50" name="search" placeholder="Nhập từ cần tìm..." required />
-  <button class="searchButton btn btn-info mt-2 " type="submit">tìm kiếm</button>
-</form>
+  <form style="margin-top: 10px ; margin-left:  40px;" class="search_form" method="get" action="<?= BASE_URL ?>/sanpham/timkiem_admin">
+    <input class="searchTerm form-control w-50" name="search" placeholder="Nhập từ cần tìm..." required />
+    <button class="searchButton btn btn-info mt-2 " type="submit">tìm kiếm</button>
+  </form>
 <table class="table table-hover" style="font-size: medium;">
   <thead>
     <tr>
@@ -28,7 +28,7 @@ if (!empty($_GET['msg'])) {
 
     <?php
     $i = 0;
-    foreach ($product as $key => $pro) {
+    foreach ($search as $key => $pro) {
       $i++;
     ?>
 

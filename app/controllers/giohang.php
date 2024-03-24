@@ -19,7 +19,7 @@ class giohang extends DController
         $table_post = "tbl_category_post";
 
         $categorymodel = $this->load->model('categorymodel');
-        
+
         $data['category'] = $categorymodel->category_home($table);
         $data['category_post'] = $categorymodel->categorypost_home($table_post);
         $data['post_index'] = $categorymodel->post_index($post);
@@ -28,17 +28,43 @@ class giohang extends DController
         $this->load->view("cart");
         $this->load->view("footer");
     }
+    public function donhang()
+    {
+        Session::init();
+        $email = $_SESSION['custumer_name'];
+        // echo ($email) ;
+        $table = "tbl_category_product";
+        $post = "tbl_post";
+        $table_post = "tbl_category_post";
+        $table_order = "tbl_order_details";
+
+        $categorymodel = $this->load->model('categorymodel');
+        $ordermodel = $this->load->model('ordermodel');
+
+        $data['order'] = $ordermodel->list_order_customer($table_order, $email);
+        $data['category'] = $categorymodel->category_home($table);
+        $data['category_post'] = $categorymodel->categorypost_home($table_post);
+        $data['post_index'] = $categorymodel->post_index($post);
+
+        // var_dump($data['order']); // hoặc print_r($data['order']);
+        $this->load->view("header", $data);
+        $this->load->view("donhang", $data);
+        $this->load->view("footer");
+    }
     public function themgiohang()
     {
         Session::init();
-
         if (isset($_SESSION['shopping_cart'])) {
+            // var_dump($_SESSION['shopping_cart']);
             $aviable = 0;
             foreach ($_SESSION['shopping_cart'] as $key => $value) {
                 if ($_SESSION['shopping_cart'][$key]['product_id'] == $_POST['product_id']) {
+                    // echo $value['product_id'];
                     $aviable++;
-                    $_SESSION['shopping_cart'][$key]['product_quanlity'] = $_SESSION['shopping_cart'][$key]['product_quanlity'] + 
-                    $_POST['product_quanlity'];
+                    // echo $aviable;
+                    $_SESSION['shopping_cart'][$key]['product_quanlity'] = $_SESSION['shopping_cart'][$key]['product_quanlity'] +
+                        $_POST['product_quanlity'];
+                    echo $_SESSION['shopping_cart'][$key]['product_quanlity'];
                 }
             }
             if ($aviable == 0) {
@@ -118,15 +144,20 @@ class giohang extends DController
         if (Session::get('shopping_cart') == true) {
             foreach (Session::get('shopping_cart') as $key => $value) {
                 var_dump(Session::get('shopping_cart'));
+                $total=$value['product_quanlity']*$value['product_price'];
                 $data_details = array(
                     'order_code' => $order_code,
                     'product_id' => $value['product_id'],
                     'product_quanlity' => $value['product_quanlity'],
+                    'product_price' => $value['product_price'],
+                    'total'=>$total,
                     'name' => $name,
                     'email' => $email,
                     'sdt' => $sdt,
                     'noidung' => $noidung,
                     'diachi' => $diachi,
+                    'order_status' => 0,
+                    'order_date' => $date . " " . $hour,
                 );
                 $result_order_details = $ordermodel->insert_order_details($table_order_details, $data_details);
             }
